@@ -9,6 +9,9 @@
 
 <body>
     <h1>All Listings</h1>
+    <form method="get" action="/listings/new">
+        <button>Create New Listing</button>
+    </form>
     <ul>
         <% for(let listing of allListings){ %>
             <li>

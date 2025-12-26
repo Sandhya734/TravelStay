@@ -44,6 +44,18 @@ app.get("/listings",async (req,res)=>{
     res.render("listings/index.ejs",{allListings});
 });
 
+//Create Route
+app.get("/listings/new",(req,res)=>{
+    res.render("listings/new.ejs");
+});
+app.post("/listings",(req,res)=>{
+    let {newList}=req.body;
+    const list=db.wanderlust.insertOne(newList);
+    list.save();
+    res.redirect("/listings",{list});
+
+})
+
 //Show Route
 app.get("/listings/:id", async (req,res)=>{
     let {id} = req.params;
@@ -51,7 +63,7 @@ app.get("/listings/:id", async (req,res)=>{
     res.render("listings/show.ejs",{listing});
 });
 
-//Create Route
+
 
 app.listen(8080,(req,res)=>{
     console.log("server is listening to port 8080");
