@@ -15,8 +15,14 @@
     <ul>
         <% for(let listing of allListings){ %>
             <li>
-                <a href="/listings/<%=listing._id %>"> <%= listing.title %></a>
+                <a href="/listings/<%=listing._id %>"> <%= listing.title %></a>  
+                <br/> 
+                <form method="get" action="/listings/<%=listing._id%>/edit">
+                    <button>Edit</button>
+                </form>
+                <hr/>
             </li>
+            
             <% } %>
     </ul>
 </body>

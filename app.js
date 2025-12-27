@@ -49,12 +49,20 @@ app.get("/listings/new",(req,res)=>{
     res.render("listings/new.ejs");
 });
 app.post("/listings",(req,res)=>{
-    let {newList}=req.body;
-    const list=db.wanderlust.insertOne(newList);
-    list.save();
-    res.redirect("/listings",{list});
-
-})
+  let {title,description,image,price, country,location}=req.body;
+  let newList=new Listing({
+    title:title,
+    description:description,
+    image:image,
+    price:price,
+    country:country,
+    location:location
+  });
+  newList.save()
+  .then((res)=>console.log(res))
+  .catch((err)=>console.log(err));
+  res.redirect("/listings");
+});
 
 //Show Route
 app.get("/listings/:id", async (req,res)=>{
@@ -63,7 +71,11 @@ app.get("/listings/:id", async (req,res)=>{
     res.render("listings/show.ejs",{listing});
 });
 
-
+app.get("/listings/:id/edit", async (req,res)=>{
+    let {id} = req.params;
+    let listing = await Listing.findById(id);
+    res.render("listings/edit.ejs",{listing});
+});
 
 app.listen(8080,(req,res)=>{
     console.log("server is listening to port 8080");
