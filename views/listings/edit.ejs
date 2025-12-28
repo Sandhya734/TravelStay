@@ -7,18 +7,19 @@
 </head>
 <body>
     <h2>Edit Your Listing</h2>
-    <form>
-        <input type="text" name="title">> 
+    <form method="post" action="/listings/<%=listing._id%>/?_method=PUT">
+
+       <input name="listing[title]" value="<%= listing.title %>" type="text">
         <br/>  <br/>
-        <input type="text" name="description" placeholder="Enter description" row="15" col="20">
+        <textarea name="listing[description]" row="25" col="40"><%= listing.description %></textarea>
         <br/>  <br/>
-        <input type="text" name="image" placeholder="Add Image/URL">
+        <input name="listing[image]" value="<%= listing.image %>" type="text">
         <br/>  <br/>
-        <input type="text" name="price" placeholder="Enter Price">
+        <input name="listing[price]" value="<%= listing.price %>" type="text">
         <br/>  <br/>
-        <input type="text" name="country" placeholder="Enter country">
+        <input name="listing[country]" value="<%= listing.country %>" type="text">
         <br/>  <br/>
-        <input type="text" name="location" placeholder="Enter location">
+        <input name="listing[location]" value="<%= listing.location %>" type="text">
         <br/>  <br/>
         <button>Add</button>
     </form>
