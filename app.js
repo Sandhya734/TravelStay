@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Listing = require('./models/listing');
 const path = require("path");
 const methodOverride = require('method-override');
-//const ejsMate = require('ejsMate');
+const ejsMate = require('ejs-mate');
 
 
 
@@ -22,7 +22,7 @@ app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.use(express.urlencoded({ extended:true }));   //req.params -> sparse the data from the request
 app.use(methodOverride("_method"));       //method-override
-//app.engine("ejs",ejsMate);
+app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
 
