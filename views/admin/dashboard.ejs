@@ -1,0 +1,79 @@
+<% layout("/layouts/boilerplate") %>
+
+    <div class="container mt-4">
+        <h2 class="mb-4">Admin Dashboard</h2>
+
+        <!-- USERS -->
+        <h4>All Users</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Block the User</th>
+                    <th>Delete the User</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% users.forEach(user=> { %>
+                    <tr>
+                        <td>
+                            <%= user.username %>
+                        </td>
+                        <td>
+                            <%= user.email %>
+                        </td>
+                        <td>
+                            <!-- Block / Unblock -->
+                            <form action="/admin/users/<%= user._id %>/block?_method=PUT" method="POST"
+                                style="display:inline;">
+                                <button class="btn btn-dark btn-sm ">
+                                    <%= user.isBlocked ? "Unblock" : "Block" %>
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <!-- Delete -->
+                            <form action="/admin/users/<%= user._id %>/delete?_method=DELETE" method="POST"
+                                style="display:inline;">
+                                <button class="btn btn-danger btn-sm">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+
+        <!-- ORDERS -->
+        <h4 class="mt-5">Orders</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Booking ID</th>
+                    <th>Check-In Date</th>
+                    <th>Check-out Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% bookings.forEach(booking=> { %>
+                    <tr>
+                        <td>
+                            <%= booking.user.username %>
+                        </td>
+                        <td>
+                            <%= booking._id %>
+                        </td>
+                        <td>
+                            <%= booking.checkIn ? new Date(booking.checkIn).toDateString() : "N/A" %>
+                        </td>
+                        <td>
+                            <%= booking.checkOut ? new Date(booking.checkOut).toDateString() : "N/A" %>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </div>

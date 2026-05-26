@@ -13,9 +13,15 @@ async function main() {
     await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
 }
 
-const initDB = async()=>{
-    await Listing.deleteMany({});    
-    await Listing.insertMany(initData.data);
+const initDB = async () => {
+    await Listing.deleteMany({});
+
+    const newData = initData.data.map((obj) => ({
+        ...obj,
+        owner: new mongoose.Types.ObjectId('69a8ed5b7c667a60b9c57414')
+    }));
+
+    await Listing.insertMany(newData);
     console.log("data was initialized");
 };
 

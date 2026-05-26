@@ -1,0 +1,45 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <!-- USERS -->
+    <h4>All Users</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td><%= user.username %></td>
+                    <td><%= user.email %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <!-- ORDERS -->
+    <h4 class="mt-5">Orders</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Order ID</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order => { %>
+                <tr>
+                    <td><%= order.user.username %></td>
+                    <td><%= order._id %></td>
+                    <td><%= order.createdAt.toDateString() %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>

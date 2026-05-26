@@ -1,36 +1,61 @@
 const mongoose = require('mongoose');
-const review = require('./review');
-const { ref } = require('joi');
+// const { ref } = require('joi');
 const Schema = mongoose.Schema;
+const Review = require("./review.js");
+const { required } = require('joi');
+
 
 const listingSchema = new Schema({
-    title:{
-        type:String,
+    title: {
+        type: String,
         required: true,
     },
     description: String,
     image: {
-        type: String,
-        default: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bGFrZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
-        set:(v)=>           //if image come but it may empty
-            v === "" ? "https://images.unsplash.com/photo-1439066615861-d1af74d74000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bGFrZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" : v,
+        filename: String,
+        url: String,
     },
-    price:{
+    services: {
+    type: [String],
+    },
+    price: {
         type: Number,
     },
-    location:{
+    location: {
         type: String,
     },
-    country:{
+    country: {
         type: String,
     },
-    reviews:[
+    reviews: [
         {
             type: Schema.Types.ObjectId,
             ref: "Review",
         },
     ],
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
+    latitude: {
+        type: Number,
+        required: true,
+    },
+    longitude: {
+        type: Number,
+        required: true,
+    },
 });
 
-const Listing = mongoose.model("Listing",listingSchema);
-module.exports= Listing;
+//When listing deleted then delete his reviews from database
+listingSchema.post("findOneAndDelete", async (listing) => {
+    if (listing) {
+        await Review.deleteMany({
+            _id: { $in: listing.reviews },
+        });
+    }
+});
+
+
+const Listing = mongoose.model("Listing", listingSchema);
+module.exports = Listing;

@@ -1,0 +1,209 @@
+<% layout("/layouts/boilerplate") %>
+    <div class="container mt-4">
+        <div class="row">
+
+            <!-- RIGHT SIDE: Reservation Form -->
+            <div class="col-md-5 mb-5 justify-content-center align-items-center">
+                <div class="card shadow-sm p-4 rounded-4 sticky-form w-100" style="max-width: 600px;">
+                    <h5 class="mb-3 text-center fw-bold">Reserve Villa</h5>
+
+                    <form action="/bookings/<%= listing._id %>" method="POST">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Full Name</label>
+                            <input name="name" type="text" class="form-control form-control-sm" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input name="email" type="email" class="form-control form-control-sm" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Password</label>
+                            <input name="password" type="password" class="form-control form-control-sm" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Phone No.</label>
+                            <input name="phoneno" type="number" class="form-control form-control-sm" required>
+                        </div>
+
+                        <!-- Check-in / Check-out -->
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bolder">SELECT DATES</label>
+
+                            <!-- Visible input -->
+                            <input type="text" id="dateRange" class="form-control" placeholder="Check-in → Check-out"
+                                required>
+
+                            <!-- Hidden inputs (sent to backend) -->
+                            <input type="hidden" name="checkIn" id="checkIn">
+                            <input type="hidden" name="checkOut" id="checkOut">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Adults</label>
+                            <input type="number" name="adults" value="1" min="1" class="form-control form-control-sm">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Children</label>
+                            <input type="number" name="children" value="0" min="0" class="form-control form-control-sm">
+                        </div>
+                        
+
+                        <!-- Payment Method -->
+                        <div class="mb-3">
+                            <label class="form-label">Select Payment Method</label>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" value="card" required>
+                                <label class="form-check-label">💳 Credit / Debit Card</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" value="upi">
+                                <label class="form-check-label">📱 UPI</label>
+                            </div>
+                        </div>
+
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-danger btn-sm rounded-pill px-3">Reserve</button>
+                            <a href="/listings/<%= listing._id %>"
+                                class="btn btn-dark btn-sm rounded-pill px-3">Cancel</a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: Listing Info -->
+            <div class="col-md-5">
+                <div class="card shadow-sm p-3 rounded-4 listing-card sticky-top" style="top: 100px;">
+
+                    <div class="d-flex gap-3">
+
+                        <!-- Image -->
+                        <img src="<%= listing.image.url %>" class="listing-img rounded-3" alt="listing">
+
+                        <!-- Info -->
+                        <div>
+                            <h6 class="fw-semibold mb-1">
+                                <%= listing.title %>
+                            </h6>
+
+                            <div class="small text-muted mb-1">
+                                ⭐ 4.92 (13) • Superhost
+                            </div>
+
+                            <p class="small mb-1 fw-semibold">
+                                Free cancellation
+                            </p>
+
+                            <p class="small text-muted mb-0">
+                                Cancel within 24 hours <br>
+                                <a href="/listings/<%=listing._id%>" class="text-decoration-underline">Full policy</a>
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <div id="bookedDatesData" data-dates='<%- JSON.stringify(bookedDates || []) %>'></div>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ✅ Get booked dates safely
+    const dataElement = document.getElementById("bookedDatesData");
+    const bookedDates = JSON.parse(dataElement.dataset.dates);
+
+    console.log("Booked Dates:", bookedDates);
+
+    flatpickr("#dateRange", {
+        mode: "range",
+        minDate: "today",
+        dateFormat: "Y-m-d",
+
+        // ✅ Disable already booked dates
+        disable: bookedDates,
+
+        // ✅ Mark booked dates with red dot + line
+        onDayCreate: function (dObj, dStr, fp, dayElem) {
+            const date = dayElem.dateObj.toISOString().split("T")[0];
+
+            if (bookedDates.includes(date)) {
+
+                // 🔴 Add red dot
+                const dot = document.createElement("span");
+                dot.style.position = "absolute";
+                dot.style.bottom = "4px";
+                dot.style.left = "50%";
+                dot.style.transform = "translateX(-50%)";
+                dot.style.width = "5px";
+                dot.style.height = "5px";
+                dot.style.background = "red";
+                dot.style.borderRadius = "50%";
+
+                // 🔴 Add underline
+                const line = document.createElement("div");
+                line.style.position = "absolute";
+                line.style.bottom = "1px";
+                line.style.left = "10%";
+                line.style.width = "80%";
+                line.style.height = "2px";
+                line.style.background = "red";
+
+                dayElem.style.position = "relative";
+                dayElem.style.color = "red";
+
+                dayElem.appendChild(dot);
+                // dayElem.appendChild(line);
+            }
+        },
+
+        // ✅ Prevent selecting invalid range (extra safety)
+        onChange: function (selectedDates) {
+
+            if (selectedDates.length === 2) {
+
+                let start = selectedDates[0];
+                let end = selectedDates[1];
+
+                let current = new Date(start);
+
+                while (current < end) {
+                    let dateStr = current.toISOString().split("T")[0];
+
+                    if (bookedDates.includes(dateStr)) {
+                        alert("Some selected dates are already booked!");
+                        this.clear();
+                        return;
+                    }
+
+                    current.setDate(current.getDate() + 1);
+                }
+
+                // ✅ Save valid dates
+                document.getElementById("checkIn").value =
+                    start.toISOString().split("T")[0];
+
+                document.getElementById("checkOut").value =
+                    end.toISOString().split("T")[0];
+            }
+        }
+    });
+
+});
+</script>
