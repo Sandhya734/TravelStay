@@ -165,20 +165,6 @@ body {
     margin-right: 2px;
   }
 
-/* Search Bar */
-.search-bar-fixed {
-  position: fixed;
-  top: 60px;              /* adjust based on navbar */
-  left: 0;
-  width: 100%;
-  z-index: 1050;
-
-  background: white;
-  padding: 10px 0;
-  border-bottom: 1px solid #ddd;
-
-  margin-bottom: 20px;   /* 👈 spacing below */
-}
 
 .flatpickr-day.booked-date {
     background-color: #ffe6e6;
@@ -197,3 +183,32 @@ body {
     width: 100%;
 }
 
+/* //Ratings */
+
+.starability-slot {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    border: none;
+}
+
+.starability-slot input {
+    display: none;
+}
+
+.starability-slot label {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.starability-slot label::before {
+    content: "★";
+}
+
+.starability-slot input:checked ~ label,
+.starability-slot label:hover,
+.starability-slot label:hover ~ label {
+    color: #ffb703;
+}
